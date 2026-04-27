@@ -58,7 +58,10 @@
                 <p><strong>DSCR:</strong> {{ "{:.2f}".format(deal.dscr()) }}</p>
                 <p><strong>Yield on Cost:</strong> {{ "{:.2f}".format(deal.yield_on_cost() * 100) }}%</p>
 
-                <p><a href="/delete_deal/{{ deal.id }}">Delete Deal</a></p>
+                <p>
+                    <a href="/edit_deal/{{ deal.id }}">Edit Deal</a> |
+                    <a href="/delete_deal/{{ deal.id }}" onclick="return confirm('Are you sure you want to delete this deal?')">Delete Deal</a>
+                </p>
 
             </div>
         {% endfor %}

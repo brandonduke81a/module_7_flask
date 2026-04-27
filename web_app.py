@@ -235,6 +235,25 @@ def dashboard():
     return render_template("dashboard.html", deals=deals)
 
 
+@app.route("/edit_deal/<int:deal_id>", methods=["GET", "POST"])
+@login_required
+def edit_deal(deal_id):
+    deal = Deal.query.filter_by(id=deal_id, user_id=session["user_id"]).first_or_404()
+
+    if request.method == "POST":
+        deal.property_name = request.form.get("property_name", "").strip()
+        deal.gross_potential_rent = float(request.form.get("gross_potential_rent", 0))
+        deal.vacancy_rate = float(request.form.get("vacancy_rate", 0)) / 100
+        deal.operating_expenses = float(request.form.get("operating_expenses", 0))
+        deal.annual_debt_service = float(request.form.get("annual_debt_service", 0))
+        deal.total_project_cost = float(request.form.get("total_project_cost", 0))
+
+        db.session.commit()
+        return redirect(url_for("dashboard"))
+
+    return render_template("edit_deal.html", deal=deal)
+
+
 @app.route("/delete_deal/<int:deal_id>")
 @login_required
 def delete_deal(deal_id):
