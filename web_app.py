@@ -16,17 +16,11 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-
     username = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
-
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(150))
-    student_id = db.Column(db.String(50))
-    course_section = db.Column(db.String(50))
-    semester = db.Column(db.String(50))
-
     is_admin = db.Column(db.Boolean, default=False)
 
     def set_password(self, password):
@@ -45,7 +39,6 @@ class Deal(db.Model):
     annual_debt_service = db.Column(db.Float, nullable=False)
     total_project_cost = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
     user_id = db.Column(db.Integer, nullable=False)
 
     def effective_gross_income(self):
@@ -126,14 +119,10 @@ def register():
             username=username,
             first_name=request.form.get("first_name", "").strip(),
             last_name=request.form.get("last_name", "").strip(),
-            email=request.form.get("email", "").strip(),
-            student_id=request.form.get("student_id", "").strip(),
-            course_section=request.form.get("course_section", "").strip(),
-            semester=request.form.get("semester", "").strip()
+            email=request.form.get("email", "").strip()
         )
 
         new_user.set_password(password)
-
         db.session.add(new_user)
         db.session.commit()
 
@@ -154,7 +143,6 @@ def login():
             session["user_id"] = user.id
             session["username"] = user.username
             session["is_admin"] = user.is_admin
-
             return redirect(url_for("dashboard"))
 
         return "Invalid credentials", 401
@@ -180,7 +168,6 @@ def admin_login():
             session["user_id"] = user.id
             session["username"] = user.username
             session["is_admin"] = True
-
             return redirect(url_for("admin_users"))
 
         return "Invalid admin credentials", 401
@@ -193,6 +180,17 @@ def admin_login():
 def admin_users():
     users = User.query.all()
     return render_template("admin_users.html", users=users)
+
+
+@app.route("/admin/delete_user/<int:user_id>")
+@admin_required
+def delete_user(user_id):
+    user = db.session.get(User, user_id)
+    if user and not user.is_admin:
+        Deal.query.filter_by(user_id=user_id).delete()
+        db.session.delete(user)
+        db.session.commit()
+    return redirect(url_for("admin_users"))
 
 
 @app.route("/make_admin/<int:user_id>")
@@ -231,7 +229,6 @@ def dashboard():
 
         db.session.add(deal)
         db.session.commit()
-
         return redirect(url_for("dashboard"))
 
     deals = Deal.query.filter_by(user_id=session["user_id"]).all()
