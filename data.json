@@ -1,0 +1,20 @@
+[
+  {
+    "first_name": "Tyson",
+    "last_name": "Riskas",
+    "student_id": "12345",
+    "email": "tyson@uvu.edu",
+    "course_section": "Section 001",
+    "semester": "Fall 2026",
+    "created_at": "2026-03-17T21:31:31"
+  },
+  {
+    "first_name": "Brandon",
+    "last_name": "Duke",
+    "student_id": "12345",
+    "email": "test@test.com",
+    "course_section": "Section 001",
+    "semester": "Spring 2026",
+    "created_at": "2026-04-20T14:48:32"
+  }
+]

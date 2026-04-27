@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Students</title>
+</head>
+<body>
+
+<h1>Student Records</h1>
+
+<p>
+    <a href="/add">Add New Student</a> |
+    <a href="/logout">Logout</a>
+</p>
+
+{% if items %}
+    {% for item in items %}
+        <div style="border:1px solid #ccc; padding:10px; margin:10px">
+
+            <p><strong>First Name:</strong> {{ item.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ item.last_name }}</p>
+            <p><strong>Student ID:</strong> {{ item.student_id }}</p>
+            <p><strong>Email:</strong> {{ item.email }}</p>
+            <p><strong>Course Section:</strong> {{ item.course_section }}</p>
+            <p><strong>Semester:</strong> {{ item.semester }}</p>
+            <p><strong>Created:</strong> {{ item.created_at }}</p>
+
+            <a href="/edit/{{ item.id }}">Edit</a> |
+            <a href="/delete/{{ item.id }}">Delete</a>
+
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No student records found. Add one to get started.</p>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CRE Underwriting Tool</title>
+</head>
+
+<body>
+
+    <h1>CRE Underwriting Tool</h1>
+
+    <p><a href="/logout">Logout</a></p>
+
+    <h2>Add Deal</h2>
+
+    <form method="POST">
+
+        <label>Property Name:</label><br>
+        <input type="text" name="property_name" required><br><br>
+
+        <label>Gross Potential Rent:</label><br>
+        <input type="number" step="0.01" name="gross_potential_rent" required><br><br>
+
+        <label>Vacancy Rate (%):</label><br>
+        <input type="number" step="0.01" name="vacancy_rate" required><br><br>
+
+        <label>Operating Expenses:</label><br>
+        <input type="number" step="0.01" name="operating_expenses" required><br><br>
+
+        <label>Annual Debt Service:</label><br>
+        <input type="number" step="0.01" name="annual_debt_service" required><br><br>
+
+        <label>Total Project Cost:</label><br>
+        <input type="number" step="0.01" name="total_project_cost" required><br><br>
+
+        <button type="submit">Save Deal</button>
+
+    </form>
+
+    <hr>
+
+    <h2>Saved Deals</h2>
+
+    {% if deals %}
+        {% for deal in deals %}
+            <div style="border:1px solid #ccc; padding:10px; margin:10px">
+
+                <p><strong>Property Name:</strong> {{ deal.property_name }}</p>
+                <p><strong>Gross Potential Rent:</strong> ${{ "{:,.2f}".format(deal.gross_potential_rent) }}</p>
+                <p><strong>Vacancy Rate:</strong> {{ "{:.2f}".format(deal.vacancy_rate * 100) }}%</p>
+                <p><strong>Operating Expenses:</strong> ${{ "{:,.2f}".format(deal.operating_expenses) }}</p>
+                <p><strong>Annual Debt Service:</strong> ${{ "{:,.2f}".format(deal.annual_debt_service) }}</p>
+                <p><strong>Total Project Cost:</strong> ${{ "{:,.2f}".format(deal.total_project_cost) }}</p>
+
+                <hr>
+
+                <p><strong>Effective Gross Income:</strong> ${{ "{:,.2f}".format(deal.effective_gross_income()) }}</p>
+                <p><strong>NOI:</strong> ${{ "{:,.2f}".format(deal.noi()) }}</p>
+                <p><strong>DSCR:</strong> {{ "{:.2f}".format(deal.dscr()) }}</p>
+                <p><strong>Yield on Cost:</strong> {{ "{:.2f}".format(deal.yield_on_cost() * 100) }}%</p>
+
+                <p><a href="/delete_deal/{{ deal.id }}">Delete Deal</a></p>
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No deals saved yet.</p>
+    {% endif %}
+
+</body>
+</html>
